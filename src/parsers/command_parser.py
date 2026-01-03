@@ -13,7 +13,8 @@ class CommandParser:
     def __init__(self):
         """Initialize the command parser."""
         self.valid_commands = {
-            'add', 'list', 'update', 'delete', 'complete', 'incomplete', 'help', 'version'
+            'add', 'list', 'update', 'delete', 'complete', 'incomplete', 'help', 'version',
+            'search', 'filter', 'sort', 'tag', 'priority', 'due', 'tagadd', 'tagremove'
         }
 
     def parse_command(self, user_input: str) -> Tuple[str, List[str]]:
@@ -176,3 +177,177 @@ class CommandParser:
             return int(args[0])
         except (ValueError, IndexError):
             return None
+
+    def validate_search_command(self, args: List[str]) -> bool:
+        """
+        Validate the 'search' command arguments.
+
+        Args:
+            args: List of arguments for the search command
+
+        Returns:
+            True if arguments are valid, False otherwise
+        """
+        return len(args) >= 1  # At least a search query is required
+
+    def validate_filter_command(self, args: List[str]) -> bool:
+        """
+        Validate the 'filter' command arguments.
+
+        Args:
+            args: List of arguments for the filter command
+
+        Returns:
+            True if arguments are valid, False otherwise
+        """
+        return len(args) >= 1  # At least a filter criterion is required
+
+    def validate_sort_command(self, args: List[str]) -> bool:
+        """
+        Validate the 'sort' command arguments.
+
+        Args:
+            args: List of arguments for the sort command
+
+        Returns:
+            True if arguments are valid, False otherwise
+        """
+        return len(args) >= 1  # At least a sort field is required
+
+    def validate_tag_command(self, args: List[str]) -> bool:
+        """
+        Validate the 'tag' command arguments (for adding tags).
+
+        Args:
+            args: List of arguments for the tag command
+
+        Returns:
+            True if arguments are valid, False otherwise
+        """
+        return len(args) >= 2  # At least an ID and a tag are required
+
+    def validate_priority_command(self, args: List[str]) -> bool:
+        """
+        Validate the 'priority' command arguments.
+
+        Args:
+            args: List of arguments for the priority command
+
+        Returns:
+            True if arguments are valid, False otherwise
+        """
+        return len(args) >= 2  # At least an ID and a priority level are required
+
+    def validate_due_command(self, args: List[str]) -> bool:
+        """
+        Validate the 'due' command arguments.
+
+        Args:
+            args: List of arguments for the due date command
+
+        Returns:
+            True if arguments are valid, False otherwise
+        """
+        return len(args) >= 2  # At least an ID and a date are required
+
+    def extract_search_query(self, args: List[str]) -> str:
+        """
+        Extract search query from command arguments.
+
+        Args:
+            args: List of arguments containing the search query
+
+        Returns:
+            The search query string
+        """
+        return ' '.join(args)
+
+    def extract_filter_criteria(self, args: List[str]) -> Dict[str, str]:
+        """
+        Extract filter criteria from command arguments.
+
+        Args:
+            args: List of arguments containing the filter criteria
+
+        Returns:
+            A dictionary of filter criteria
+        """
+        # For now, we'll just return the first argument as a simple filter
+        # In a more complex implementation, this could parse more sophisticated filters
+        if len(args) >= 1:
+            return {'criterion': args[0]}
+        return {}
+
+    def extract_sort_criteria(self, args: List[str]) -> Dict[str, str]:
+        """
+        Extract sort criteria from command arguments.
+
+        Args:
+            args: List of arguments containing the sort criteria
+
+        Returns:
+            A dictionary of sort criteria
+        """
+        # Format: sort field [asc|desc]
+        field = args[0] if len(args) > 0 else 'id'
+        ascending = True
+        if len(args) > 1:
+            ascending = args[1].lower() in ['asc', 'ascending', 'a']
+        return {'by': field, 'ascending': ascending}
+
+    def extract_tag_info(self, args: List[str]) -> Tuple[Optional[int], str]:
+        """
+        Extract task ID and tag from command arguments.
+
+        Args:
+            args: List of arguments containing the task ID and tag
+
+        Returns:
+            A tuple containing the task ID and tag
+        """
+        if len(args) < 2:
+            return None, ""
+        try:
+            task_id = int(args[0])
+            tag = args[1]
+            return task_id, tag
+        except ValueError:
+            return None, ""
+
+    def extract_priority_info(self, args: List[str]) -> Tuple[Optional[int], str]:
+        """
+        Extract task ID and priority from command arguments.
+
+        Args:
+            args: List of arguments containing the task ID and priority
+
+        Returns:
+            A tuple containing the task ID and priority
+        """
+        if len(args) < 2:
+            return None, ""
+        try:
+            task_id = int(args[0])
+            priority = args[1]
+            return task_id, priority
+        except ValueError:
+            return None, ""
+
+    def extract_due_info(self, args: List[str]) -> Tuple[Optional[int], str]:
+        """
+        Extract task ID and due date from command arguments.
+
+        Args:
+            args: List of arguments containing the task ID and due date
+
+        Returns:
+            A tuple containing the task ID and due date string
+        """
+        if len(args) < 2:
+            return None, ""
+        try:
+            task_id = int(args[0])
+            due_date_str = ' '.join(args[1:])  # Join remaining arguments as date string
+            return task_id, due_date_str
+        except ValueError:
+            return None, ""

@@ -31,17 +31,17 @@ class TestTask(unittest.TestCase):
     def test_task_string_representation(self):
         """Test the string representation of a task."""
         task = Task(id=1, title="Test Task", description="Test Description")
-        expected = "[O] 1: Test Task - Test Description"
+        expected = "[O] [medium] 1: Test Task - Test Description"
         self.assertEqual(str(task), expected)
 
         # Test with completed task
         task.completed = True
-        expected = "[X] 1: Test Task - Test Description"
+        expected = "[X] [medium] 1: Test Task - Test Description"
         self.assertEqual(str(task), expected)
 
         # Test with no description
         task = Task(id=1, title="Test Task")
-        expected = "[O] 1: Test Task - No description"
+        expected = "[O] [medium] 1: Test Task - No description"
         self.assertEqual(str(task), expected)
 
     def test_task_validation(self):

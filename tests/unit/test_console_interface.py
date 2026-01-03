@@ -21,21 +21,21 @@ class TestConsoleInterface(unittest.TestCase):
         """Test formatting a single task."""
         task = Task(id=1, title="Test Task", description="Test Description")
 
-        # Test incomplete task
+        # Test incomplete task with priority
         formatted = self.interface.format_task(task)
-        expected = "[O] 1: Test Task - Test Description"
+        expected = "[O] [medium] 1: Test Task - Test Description"
         self.assertEqual(formatted, expected)
 
-        # Test completed task
+        # Test completed task with priority
         task.completed = True
         formatted = self.interface.format_task(task)
-        expected = "[X] 1: Test Task - Test Description"
+        expected = "[X] [medium] 1: Test Task - Test Description"
         self.assertEqual(formatted, expected)
 
         # Test task with no description
         task = Task(id=2, title="No Description Task")
         formatted = self.interface.format_task(task)
-        expected = "[O] 2: No Description Task - No description"
+        expected = "[O] [medium] 2: No Description Task - No description"
         self.assertEqual(formatted, expected)
 
     def test_display_task(self):
@@ -52,7 +52,7 @@ class TestConsoleInterface(unittest.TestCase):
         sys.stdout = sys.__stdout__
 
         output = captured_output.getvalue().strip()
-        expected = "[O] 1: Test Task - Test Description"
+        expected = "[O] [medium] 1: Test Task - Test Description"
         self.assertEqual(output, expected)
 
     def test_display_tasks_empty(self):
@@ -85,8 +85,8 @@ class TestConsoleInterface(unittest.TestCase):
         output = captured_output.getvalue()
         # Check that the output contains the expected elements
         self.assertIn("Your Tasks:", output)
-        self.assertIn("[O] 1: Task 1 - Description 1", output)
-        self.assertIn("[X] 2: Task 2 - Description 2", output)
+        self.assertIn("[O] [medium] 1: Task 1 - Description 1", output)
+        self.assertIn("[X] [medium] 2: Task 2 - Description 2", output)
         self.assertIn("-" * 50, output)
 
     def test_display_error(self):

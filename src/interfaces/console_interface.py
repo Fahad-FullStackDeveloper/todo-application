@@ -47,8 +47,8 @@ class ConsoleInterface:
         Returns:
             Formatted string representation of the task
         """
-        status = "X" if task.completed else "O"
-        return f"[{status}] {task.id}: {task.title} - {task.description or 'No description'}"
+        # Use the Task's __str__ method which includes all new fields
+        return str(task)
 
     def display_error(self, message: str) -> None:
         """
