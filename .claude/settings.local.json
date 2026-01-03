@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m unittest discover tests/unit/ -v)",
+      "Bash(python src/main.py)",
+      "Bash(python src/main.py list)",
+      "Bash(PYTHONPATH=src python -m unittest discover tests/unit/ -v)",
+      "Bash(PYTHONPATH=src python -m unittest discover tests/integration/ -v)"
+    ]
+  }
+}
